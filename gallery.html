@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Archive | Urban Outlaw Supply Co.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pitch-black: #0a0a0a;
+            --antique-bronze: #a38b5c;
+            --gunmetal: #6b7280;
+            --kraft: #c4a574;
+            --cream: #f5f0e8;
+            --rust: #8b4513;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 100px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--pitch-black);
+            color: var(--cream);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .display-font {
+            font-family: 'Bebas Neue', Impact, sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10,10,10,0.95);
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-badge {
+            width: 48px;
+            height: 48px;
+            background: var(--antique-bronze);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-badge::before {
+            content: '★';
+            font-size: 1.5rem;
+            color: var(--pitch-black);
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            color: var(--cream);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 1;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--antique-bronze);
+        }
+
+        .nav-links a.active {
+            color: var(--antique-bronze);
+        }
+
+        /* Gallery Hero */
+        .gallery-hero {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10rem 2rem 4rem;
+            position: relative;
+            background: 
+                linear-gradient(to bottom, rgba(10, 10, 10, 0.9) 0%, rgba(10, 10, 10, 0.95) 100%),
+                linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .gallery-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--antique-bronze), transparent);
+        }
+
+        .gallery-label {
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            color: var(--gunmetal);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .gallery-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1;
+            color: var(--cream);
+            margin-bottom: 1rem;
+        }
+
+        .gallery-title .highlight {
+            color: var(--kraft);
+        }
+
+        .gallery-subtitle {
+            font-size: 1.1rem;
+            color: var(--gunmetal);
+            font-style: italic;
+            max-width: 600px;
+        }
+
+        /* 3D Gallery Container */
+        .gallery-section {
+            padding: 5rem 2rem;
+            background: var(--pitch-black);
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .gallery-box {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-box span {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: center;
+            transform-style: preserve-3d;
+            transform: rotateY(calc(var(--i) * 45deg)) translateZ(280px);
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .gallery-box span img {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            width: calc(100% - 30px);
+            height: calc(100% - 30px);
+            object-fit: contain;
+            object-position: center;
+            border: 2px solid var(--antique-bronze);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(163, 139, 92, 0.3);
+            transition: all 0.3s ease;
+            background: #0a0a0a;
+            visibility: visible;
+            opacity: 1;
+            display: block;
+        }
+
+        .gallery-box span:hover img {
+            border-color: var(--kraft);
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.9),
+                0 0 30px rgba(163, 139, 92, 0.4);
+        }
+
+        /* Controls */
+        .gallery-controls {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+            align-items: center;
+        }
+
+        .gallery-btn {
+            width: 60px;
+            height: 60px;
+            background: transparent;
+            border: 2px solid var(--gunmetal);
+            color: var(--cream);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .gallery-btn:hover {
+            border-color: var(--antique-bronze);
+            background: rgba(163, 139, 92, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .gallery-btn:active {
+            transform: translateY(0);
+        }
+
+        .gallery-btn.prev::before {
+            content: '‹';
+        }
+
+        .gallery-btn.next::before {
+            content: '›';
+        }
+
+        .gallery-counter {
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            color: var(--kraft);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Instructions */
+        .gallery-instructions {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--gunmetal);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Image info overlay */
+        .image-info {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--gunmetal);
+            padding: 1rem 2rem;
+            text-align: center;
+            max-width: 600px;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-title {
+            font-size: 1.1rem;
+            color: var(--kraft);
+            margin-bottom: 0.25rem;
+        }
+
+        .image-desc {
+            font-size: 0.85rem;
+            color: var(--gunmetal);
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: #050505;
+            border-top: 1px solid #1a1a1a;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--gunmetal);
+            font-size: 0.85rem;
+        }
+
+        .footer-text a {
+            color: var(--antique-bronze);
+            text-decoration: none;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                border-left: 1px solid #333;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.1rem;
+            }
+
+            .gallery-container {
+                height: 350px;
+            }
+
+            .gallery-box {
+                width: 160px;
+                height: 160px;
+            }
+
+            .gallery-box span {
+                transform: rotateY(calc(var(--i) * 45deg)) translateZ(220px);
+            }
+
+            .gallery-btn {
+                width: 50px;
+                height: 50px;
+            }
+
+            .image-info {
+                padding: 0.75rem 1.5rem;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <div class="logo-badge"></div>
+            <span class="logo-text display-font">Urban Outlaw Supply</span>
+        </div>
+        <div class="hamburger" onclick="this.classList.toggle('active'); document.querySelector('.nav-links').classList.toggle('active');">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="the-build.html">The Build</a></li>
+            <li><a href="ethos.html">Ethos</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="gallery.html" class="active">The Archive</a></li>
+            <li><a href="shop.html">Store</a></li>
+        </ul>
+    </nav>
+
+    <section class="gallery-hero">
+        <span class="gallery-label display-font">Visual Archive</span>
+        <h1 class="gallery-title display-font">
+            The <span class="highlight">Archive</span>
+        </h1>
+        <p class="gallery-subtitle">Four decades of obsessive detail. Realism portraits that carry weight and history.</p>
+    </section>
+
+    <section class="gallery-section">
+        <div class="gallery-container">
+            <div class="gallery-box">
+                <span style="--i:1"><img src="images/gallery/img1.jpg" loading="eager" alt="Fractured Reality" data-title="Fractured Reality" data-desc="Digital composite • Exploring trauma and resilience through layered portraiture"></span>
+                <span style="--i:2"><img src="images/gallery/img2.jpg" loading="eager" alt="Ethereal Portrait" data-title="Ethereal" data-desc="Digital painting • Soft focus studies in form and light"></span>
+                <span style="--i:3"><img src="images/gallery/img3.jpg" loading="eager" alt="Movement Study" data-title="Movement Study" data-desc="Digital • Capturing gesture and flow in portraiture"></span>
+                <span style="--i:4"><img src="images/gallery/img4.jpg" loading="eager" alt="Grace" data-title="Grace" data-desc="Digital rendering • Studies in classical form and modern technique"></span>
+                <span style="--i:5"><img src="images/gallery/img5.jpg" loading="eager" alt="Raw Expression" data-title="Raw Expression" data-desc="Digital • Unfiltered emotion and textural depth"></span>
+                <span style="--i:6"><img src="images/gallery/img6.jpg" loading="eager" alt="Dual Perspective" data-title="Dual Perspective" data-desc="Digital composite • Mother and child, isolation and connection"></span>
+                <span style="--i:7"><img src="images/gallery/img7.jpg" loading="eager" alt="Inner Turmoil" data-title="Inner Turmoil" data-desc="Digital rendering • Psychological portraiture with textural overlay"></span>
+                <span style="--i:8"><img src="images/gallery/img8.jpg" loading="eager" alt="Contemplation" data-title="Contemplation" data-desc="Graphite study • Traditional technique meets modern subject"></span>
+            </div>
+
+            <div class="image-info">
+                <div class="image-title display-font">Fractured Reality</div>
+                <div class="image-desc">Digital composite • Exploring trauma and resilience through layered portraiture</div>
+            </div>
+        </div>
+
+        <div class="gallery-controls">
+            <button class="gallery-btn prev display-font" aria-label="Previous image"></button>
+            <div class="gallery-counter display-font">
+                <span id="current">1</span> / <span id="total">8</span>
+            </div>
+            <button class="gallery-btn next display-font" aria-label="Next image"></button>
+        </div>
+
+        <p class="gallery-instructions display-font">
+            Rotate to explore • Click arrows or use keyboard
+        </p>
+    </section>
+
+    <footer>
+        <p class="footer-text">© 2026 Urban Outlaw Supply Co. | <a href="index.html">Back to Home</a></p>
+    </footer>
+
+    <script>
+        const prev = document.querySelector(".prev");
+        const next = document.querySelector(".next");
+        const box = document.querySelector(".gallery-box");
+        const currentCounter = document.getElementById("current");
+        const totalCounter = document.getElementById("total");
+        const imageInfo = document.querySelector(".image-info");
+        const imageTitle = imageInfo.querySelector(".image-title");
+        const imageDesc = imageInfo.querySelector(".image-desc");
+
+        let degrees = 0;
+        let currentImage = 1;
+        const totalImages = 8;
+
+        // Get all image spans
+        const images = document.querySelectorAll(".gallery-box span");
+        console.log("Total spans found:", images.length);
+
+        // Preload all images
+        const imageElements = document.querySelectorAll(".gallery-box img");
+        console.log("Total img elements found:", imageElements.length);
+        let imagesLoaded = 0;
+        
+        imageElements.forEach((img, index) => {
+            console.log(`Image ${index + 1} src:`, img.src);
+            
+            // Force reload if image failed
+            img.onerror = function() {
+                console.error(`FAILED to load image ${index + 1}: ${img.src}`);
+            };
+            
+            img.onload = function() {
+                imagesLoaded++;
+                console.log(`SUCCESS: Loaded image ${imagesLoaded}/${totalImages} - ${img.src}`);
+            };
+            
+            // If image already loaded (from cache)
+            if (img.complete && img.naturalHeight !== 0) {
+                imagesLoaded++;
+                console.log(`Image ${index + 1} already loaded from cache`);
+            }
+        });
+
+        // Update counter and info display
+        totalCounter.textContent = totalImages;
+
+        function updateInfo() {
+            const currentImg = images[currentImage - 1].querySelector('img');
+            imageTitle.textContent = currentImg.dataset.title;
+            imageDesc.textContent = currentImg.dataset.desc;
+            currentCounter.textContent = currentImage;
+            console.log(`Displaying image ${currentImage}: ${currentImg.dataset.title}`);
+        }
+
+        prev.addEventListener('click', function() {
+            degrees += 45;
+            box.style.transform = `perspective(1000px) rotateY(${degrees}deg)`;
+            
+            currentImage--;
+            if (currentImage < 1) currentImage = totalImages;
+            updateInfo();
+        });
+
+        next.addEventListener('click', function() {
+            degrees -= 45;
+            box.style.transform = `perspective(1000px) rotateY(${degrees}deg)`;
+            
+            currentImage++;
+            if (currentImage > totalImages) currentImage = 1;
+            updateInfo();
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                prev.click();
+            } else if (e.key === 'ArrowRight') {
+                next.click();
+            }
+        });
+
+        // Initialize with first image info
+        updateInfo();
+        
+        // Report loading status after 2 seconds
+        setTimeout(() => {
+            console.log(`Final status: ${imagesLoaded}/${totalImages} images loaded successfully`);
+            if (imagesLoaded < totalImages) {
+                console.error(`WARNING: Only ${imagesLoaded} out of ${totalImages} images loaded!`);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
