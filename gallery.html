@@ -25,7 +25,6 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 100px;
         }
 
         body {
@@ -115,7 +114,6 @@
             font-size: 0.85rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            opacity: 1;
             transition: color 0.3s ease;
         }
 
@@ -127,9 +125,37 @@
             color: var(--antique-bronze);
         }
 
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
         /* Gallery Hero */
         .gallery-hero {
-            min-height: 50vh;
+            min-height: 40vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -178,160 +204,119 @@
             max-width: 600px;
         }
 
-        /* 3D Gallery Container */
-        .gallery-section {
-            padding: 5rem 2rem;
+        /* Masonry Gallery */
+        .masonry-section {
+            padding: 3rem 2rem 5rem;
             background: var(--pitch-black);
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
 
-        .gallery-container {
+        .masonry-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            columns: 3;
+            column-gap: 1.5rem;
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
             position: relative;
+            overflow: hidden;
+            border: 1px solid #222;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .masonry-item:hover {
+            border-color: var(--antique-bronze);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .masonry-item img {
             width: 100%;
-            max-width: 900px;
-            height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            perspective: 1000px;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
         }
 
-        .gallery-box {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        .masonry-item:hover img {
+            transform: scale(1.02);
         }
 
-        .gallery-box span {
-            position: absolute;
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            transform-origin: center;
-            transform-style: preserve-3d;
-            transform: rotateY(calc(var(--i) * 45deg)) translateZ(280px);
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .gallery-box span img {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            bottom: 15px;
-            width: calc(100% - 30px);
-            height: calc(100% - 30px);
-            object-fit: contain;
-            object-position: center;
-            border: 2px solid var(--antique-bronze);
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.7),
-                0 0 0 1px rgba(163, 139, 92, 0.3);
-            transition: all 0.3s ease;
-            background: #0a0a0a;
-            visibility: visible;
-            opacity: 1;
-            display: block;
-        }
-
-        .gallery-box span:hover img {
-            border-color: var(--kraft);
-            box-shadow: 
-                0 25px 80px rgba(0, 0, 0, 0.9),
-                0 0 30px rgba(163, 139, 92, 0.4);
-        }
-
-        /* Controls */
-        .gallery-controls {
-            display: flex;
-            gap: 2rem;
-            margin-top: 3rem;
-            align-items: center;
-        }
-
-        .gallery-btn {
-            width: 60px;
-            height: 60px;
-            background: transparent;
-            border: 2px solid var(--gunmetal);
-            color: var(--cream);
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
             justify-content: center;
-            font-size: 1.5rem;
+            align-items: center;
+            padding: 2rem;
         }
 
-        .gallery-btn:hover {
-            border-color: var(--antique-bronze);
-            background: rgba(163, 139, 92, 0.1);
-            transform: translateY(-2px);
+        .lightbox.active {
+            display: flex;
         }
 
-        .gallery-btn:active {
-            transform: translateY(0);
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
         }
 
-        .gallery-btn.prev::before {
-            content: '‹';
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border: 2px solid var(--antique-bronze);
         }
 
-        .gallery-btn.next::before {
-            content: '›';
-        }
-
-        .gallery-counter {
-            font-size: 1.1rem;
-            letter-spacing: 0.15em;
-            color: var(--kraft);
-            min-width: 80px;
-            text-align: center;
-        }
-
-        /* Instructions */
-        .gallery-instructions {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--gunmetal);
-            font-size: 0.9rem;
-            letter-spacing: 0.1em;
-        }
-
-        /* Image info overlay */
-        .image-info {
+        .lightbox-close {
             position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(10, 10, 10, 0.95);
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .lightbox-close:hover {
+            color: var(--antique-bronze);
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(10, 10, 10, 0.8);
             border: 1px solid var(--gunmetal);
-            padding: 1rem 2rem;
-            text-align: center;
-            max-width: 600px;
-            opacity: 1;
-            transition: opacity 0.3s ease;
+            color: var(--cream);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 1rem 1.25rem;
+            transition: all 0.3s ease;
         }
 
-        .image-title {
-            font-size: 1.1rem;
-            color: var(--kraft);
-            margin-bottom: 0.25rem;
+        .lightbox-nav:hover {
+            border-color: var(--antique-bronze);
+            color: var(--antique-bronze);
         }
 
-        .image-desc {
-            font-size: 0.85rem;
-            color: var(--gunmetal);
-            font-style: italic;
+        .lightbox-prev {
+            left: -60px;
+        }
+
+        .lightbox-next {
+            right: -60px;
         }
 
         /* Footer */
@@ -352,35 +337,13 @@
             text-decoration: none;
         }
 
-        /* Hamburger Menu */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-            z-index: 101;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 2px;
-            background: var(--cream);
-            transition: all 0.3s ease;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
-
         /* Responsive */
+        @media (max-width: 1024px) {
+            .masonry-grid {
+                columns: 2;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
                 padding: 1rem 1.5rem;
@@ -413,27 +376,30 @@
                 font-size: 1.1rem;
             }
 
-            .gallery-container {
-                height: 350px;
+            .masonry-grid {
+                columns: 1;
+                column-gap: 0;
             }
 
-            .gallery-box {
-                width: 160px;
-                height: 160px;
+            .masonry-item {
+                margin-bottom: 1rem;
             }
 
-            .gallery-box span {
-                transform: rotateY(calc(var(--i) * 45deg)) translateZ(220px);
+            .gallery-hero {
+                padding: 8rem 1.5rem 3rem;
+                min-height: 30vh;
             }
 
-            .gallery-btn {
-                width: 50px;
-                height: 50px;
+            .lightbox-nav {
+                padding: 0.75rem 1rem;
             }
 
-            .image-info {
-                padding: 0.75rem 1.5rem;
-                max-width: 90%;
+            .lightbox-prev {
+                left: 10px;
+            }
+
+            .lightbox-next {
+                right: 10px;
             }
         }
     </style>
@@ -467,133 +433,112 @@
         <p class="gallery-subtitle">Four decades of obsessive detail. Realism portraits that carry weight and history.</p>
     </section>
 
-    <section class="gallery-section">
-        <div class="gallery-container">
-            <div class="gallery-box">
-                <span style="--i:1"><img src="images/gallery/img1.jpg" loading="eager" alt="Fractured Reality" data-title="Fractured Reality" data-desc="Digital composite • Exploring trauma and resilience through layered portraiture"></span>
-                <span style="--i:2"><img src="images/gallery/img2.jpg" loading="eager" alt="Ethereal Portrait" data-title="Ethereal" data-desc="Digital painting • Soft focus studies in form and light"></span>
-                <span style="--i:3"><img src="images/gallery/img3.jpg" loading="eager" alt="Movement Study" data-title="Movement Study" data-desc="Digital • Capturing gesture and flow in portraiture"></span>
-                <span style="--i:4"><img src="images/gallery/img4.jpg" loading="eager" alt="Grace" data-title="Grace" data-desc="Digital rendering • Studies in classical form and modern technique"></span>
-                <span style="--i:5"><img src="images/gallery/img5.jpg" loading="eager" alt="Raw Expression" data-title="Raw Expression" data-desc="Digital • Unfiltered emotion and textural depth"></span>
-                <span style="--i:6"><img src="images/gallery/img6.jpg" loading="eager" alt="Dual Perspective" data-title="Dual Perspective" data-desc="Digital composite • Mother and child, isolation and connection"></span>
-                <span style="--i:7"><img src="images/gallery/img7.jpg" loading="eager" alt="Inner Turmoil" data-title="Inner Turmoil" data-desc="Digital rendering • Psychological portraiture with textural overlay"></span>
-                <span style="--i:8"><img src="images/gallery/img8.jpg" loading="eager" alt="Contemplation" data-title="Contemplation" data-desc="Graphite study • Traditional technique meets modern subject"></span>
+    <section class="masonry-section">
+        <div class="masonry-grid">
+            <div class="masonry-item" onclick="openLightbox(0)">
+                <img src="images/gallery/img1.jpeg" alt="Portrait 1" loading="lazy">
             </div>
-
-            <div class="image-info">
-                <div class="image-title display-font">Fractured Reality</div>
-                <div class="image-desc">Digital composite • Exploring trauma and resilience through layered portraiture</div>
+            <div class="masonry-item" onclick="openLightbox(1)">
+                <img src="images/gallery/img2.jpeg" alt="Portrait 2" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(2)">
+                <img src="images/gallery/img3.jpeg" alt="Portrait 3" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(3)">
+                <img src="images/gallery/img4.jpeg" alt="Portrait 4" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(4)">
+                <img src="images/gallery/img5.jpeg" alt="Portrait 5" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(5)">
+                <img src="images/gallery/img6.jpeg" alt="Portrait 6" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(6)">
+                <img src="images/gallery/img7.jpeg" alt="Portrait 7" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(7)">
+                <img src="images/gallery/img8.jpeg" alt="Portrait 8" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(8)">
+                <img src="images/gallery/img9.jpeg" alt="Portrait 9" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(9)">
+                <img src="images/gallery/img10.jpeg" alt="Portrait 10" loading="lazy">
+            </div>
+            <div class="masonry-item" onclick="openLightbox(10)">
+                <img src="images/gallery/img11.jpeg" alt="Portrait 11" loading="lazy">
             </div>
         </div>
-
-        <div class="gallery-controls">
-            <button class="gallery-btn prev display-font" aria-label="Previous image"></button>
-            <div class="gallery-counter display-font">
-                <span id="current">1</span> / <span id="total">8</span>
-            </div>
-            <button class="gallery-btn next display-font" aria-label="Next image"></button>
-        </div>
-
-        <p class="gallery-instructions display-font">
-            Rotate to explore • Click arrows or use keyboard
-        </p>
     </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">×</button>
+            <button class="lightbox-nav lightbox-prev" onclick="prevImage()">‹</button>
+            <img src="" alt="Lightbox image" id="lightbox-img">
+            <button class="lightbox-nav lightbox-next" onclick="nextImage()">›</button>
+        </div>
+    </div>
 
     <footer>
         <p class="footer-text">© 2026 Urban Outlaw Supply Co. | <a href="index.html">Back to Home</a></p>
     </footer>
 
     <script>
-        const prev = document.querySelector(".prev");
-        const next = document.querySelector(".next");
-        const box = document.querySelector(".gallery-box");
-        const currentCounter = document.getElementById("current");
-        const totalCounter = document.getElementById("total");
-        const imageInfo = document.querySelector(".image-info");
-        const imageTitle = imageInfo.querySelector(".image-title");
-        const imageDesc = imageInfo.querySelector(".image-desc");
-
-        let degrees = 0;
-        let currentImage = 1;
-        const totalImages = 8;
-
-        // Get all image spans
-        const images = document.querySelectorAll(".gallery-box span");
-        console.log("Total spans found:", images.length);
-
-        // Preload all images
-        const imageElements = document.querySelectorAll(".gallery-box img");
-        console.log("Total img elements found:", imageElements.length);
-        let imagesLoaded = 0;
+        const images = [
+            'images/gallery/img1.jpeg',
+            'images/gallery/img2.jpeg',
+            'images/gallery/img3.jpeg',
+            'images/gallery/img4.jpeg',
+            'images/gallery/img5.jpeg',
+            'images/gallery/img6.jpeg',
+            'images/gallery/img7.jpeg',
+            'images/gallery/img8.jpeg',
+            'images/gallery/img9.jpeg',
+            'images/gallery/img10.jpeg',
+            'images/gallery/img11.jpeg'
+        ];
         
-        imageElements.forEach((img, index) => {
-            console.log(`Image ${index + 1} src:`, img.src);
-            
-            // Force reload if image failed
-            img.onerror = function() {
-                console.error(`FAILED to load image ${index + 1}: ${img.src}`);
-            };
-            
-            img.onload = function() {
-                imagesLoaded++;
-                console.log(`SUCCESS: Loaded image ${imagesLoaded}/${totalImages} - ${img.src}`);
-            };
-            
-            // If image already loaded (from cache)
-            if (img.complete && img.naturalHeight !== 0) {
-                imagesLoaded++;
-                console.log(`Image ${index + 1} already loaded from cache`);
-            }
-        });
+        let currentIndex = 0;
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
 
-        // Update counter and info display
-        totalCounter.textContent = totalImages;
-
-        function updateInfo() {
-            const currentImg = images[currentImage - 1].querySelector('img');
-            imageTitle.textContent = currentImg.dataset.title;
-            imageDesc.textContent = currentImg.dataset.desc;
-            currentCounter.textContent = currentImage;
-            console.log(`Displaying image ${currentImage}: ${currentImg.dataset.title}`);
+        function openLightbox(index) {
+            currentIndex = index;
+            lightboxImg.src = images[currentIndex];
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        prev.addEventListener('click', function() {
-            degrees += 45;
-            box.style.transform = `perspective(1000px) rotateY(${degrees}deg)`;
-            
-            currentImage--;
-            if (currentImage < 1) currentImage = totalImages;
-            updateInfo();
-        });
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-        next.addEventListener('click', function() {
-            degrees -= 45;
-            box.style.transform = `perspective(1000px) rotateY(${degrees}deg)`;
-            
-            currentImage++;
-            if (currentImage > totalImages) currentImage = 1;
-            updateInfo();
-        });
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            lightboxImg.src = images[currentIndex];
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            lightboxImg.src = images[currentIndex];
+        }
 
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft') {
-                prev.click();
-            } else if (e.key === 'ArrowRight') {
-                next.click();
-            }
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextImage();
+            if (e.key === 'ArrowLeft') prevImage();
         });
 
-        // Initialize with first image info
-        updateInfo();
-        
-        // Report loading status after 2 seconds
-        setTimeout(() => {
-            console.log(`Final status: ${imagesLoaded}/${totalImages} images loaded successfully`);
-            if (imagesLoaded < totalImages) {
-                console.error(`WARNING: Only ${imagesLoaded} out of ${totalImages} images loaded!`);
-            }
-        }, 2000);
+        // Close lightbox when clicking outside image
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) closeLightbox();
+        });
     </script>
 </body>
 </html>
