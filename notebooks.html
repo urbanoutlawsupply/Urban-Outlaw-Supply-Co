@@ -153,9 +153,31 @@
             transform: rotate(-45deg) translate(5px, -5px);
         }
 
+        /* Construction Banner */
+        .construction-banner {
+            margin-top: 81px;
+            padding: 1rem 2rem;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--pitch-black),
+                var(--pitch-black) 10px,
+                #1a1a1a 10px,
+                #1a1a1a 20px
+            );
+            border-top: 3px solid var(--antique-bronze);
+            border-bottom: 3px solid var(--antique-bronze);
+            text-align: center;
+        }
+
+        .construction-text {
+            color: var(--antique-bronze);
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+        }
+
         /* Breadcrumb */
         .breadcrumb {
-            padding: 6rem 2rem 1rem;
+            padding: 2rem 2rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -320,6 +342,13 @@
             background: var(--kraft);
         }
 
+        .btn-coming-soon {
+            background: transparent;
+            color: var(--gunmetal);
+            border: 1px solid var(--gunmetal);
+            cursor: default;
+        }
+
         /* Features Section */
         .features-section {
             padding: 4rem 2rem;
@@ -455,6 +484,11 @@
         </ul>
     </nav>
 
+    <!-- Under Construction Banner -->
+    <div class="construction-banner">
+        <span class="construction-text display-font">🚧 Store Under Construction 🚧</span>
+    </div>
+
     <div class="breadcrumb">
         <a href="index.html">Home</a>
         <span>/</span>
@@ -480,15 +514,7 @@
                     <h3 class="product-name display-font">A6 Kraft Journal — Lined</h3>
                     <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Lined pages for notes and lists.</p>
                     <div class="product-price">£3.99</div>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
-                        <input type="hidden" name="item_name" value="A6 Kraft Journal - Lined">
-                        <input type="hidden" name="amount" value="3.99">
-                        <input type="hidden" name="currency_code" value="GBP">
-                        <input type="hidden" name="shipping" value="1.50">
-                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
-                    </form>
+                    <span class="btn btn-coming-soon display-font">Coming Soon</span>
                 </div>
             </div>
 
@@ -501,15 +527,7 @@
                     <h3 class="product-name display-font">A6 Kraft Journal — Dot Grid</h3>
                     <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Dot grid pages for sketches and layouts.</p>
                     <div class="product-price">£3.99</div>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
-                        <input type="hidden" name="item_name" value="A6 Kraft Journal - Dot Grid">
-                        <input type="hidden" name="amount" value="3.99">
-                        <input type="hidden" name="currency_code" value="GBP">
-                        <input type="hidden" name="shipping" value="1.50">
-                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
-                    </form>
+                    <span class="btn btn-coming-soon display-font">Coming Soon</span>
                 </div>
             </div>
 
@@ -522,15 +540,7 @@
                     <h3 class="product-name display-font">A6 Kraft Journal — Blank</h3>
                     <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Blank pages for complete freedom.</p>
                     <div class="product-price">£3.99</div>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
-                        <input type="hidden" name="item_name" value="A6 Kraft Journal - Blank">
-                        <input type="hidden" name="amount" value="3.99">
-                        <input type="hidden" name="currency_code" value="GBP">
-                        <input type="hidden" name="shipping" value="1.50">
-                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
-                    </form>
+                    <span class="btn btn-coming-soon display-font">Coming Soon</span>
                 </div>
             </div>
 
@@ -543,15 +553,7 @@
                     <h3 class="product-name display-font">A5 Kraft Journal — Lined</h3>
                     <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Lined pages for serious note-taking.</p>
                     <div class="product-price">£5.99</div>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
-                        <input type="hidden" name="item_name" value="A5 Kraft Journal - Lined">
-                        <input type="hidden" name="amount" value="5.99">
-                        <input type="hidden" name="currency_code" value="GBP">
-                        <input type="hidden" name="shipping" value="1.50">
-                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
-                    </form>
+                    <span class="btn btn-coming-soon display-font">Coming Soon</span>
                 </div>
             </div>
 
@@ -564,15 +566,7 @@
                     <h3 class="product-name display-font">A5 Kraft Journal — Dot Grid</h3>
                     <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Dot grid pages for designers and planners.</p>
                     <div class="product-price">£5.99</div>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
-                        <input type="hidden" name="item_name" value="A5 Kraft Journal - Dot Grid">
-                        <input type="hidden" name="amount" value="5.99">
-                        <input type="hidden" name="currency_code" value="GBP">
-                        <input type="hidden" name="shipping" value="1.50">
-                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
-                    </form>
+                    <span class="btn btn-coming-soon display-font">Coming Soon</span>
                 </div>
             </div>
 
@@ -585,15 +579,7 @@
                     <h3 class="product-name display-font">A5 Kraft Sketchbook — Blank</h3>
                     <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Thick blank pages for sketching and drawing.</p>
                     <div class="product-price">£6.99</div>
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                        <input type="hidden" name="cmd" value="_xclick">
-                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
-                        <input type="hidden" name="item_name" value="A5 Kraft Sketchbook - Blank">
-                        <input type="hidden" name="amount" value="6.99">
-                        <input type="hidden" name="currency_code" value="GBP">
-                        <input type="hidden" name="shipping" value="1.50">
-                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
-                    </form>
+                    <span class="btn btn-coming-soon display-font">Coming Soon</span>
                 </div>
             </div>
 

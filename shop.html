@@ -154,9 +154,31 @@
             transform: rotate(-45deg) translate(5px, -5px);
         }
 
+        /* Construction Banner */
+        .construction-banner {
+            margin-top: 81px;
+            padding: 1rem 2rem;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--pitch-black),
+                var(--pitch-black) 10px,
+                #1a1a1a 10px,
+                #1a1a1a 20px
+            );
+            border-top: 3px solid var(--antique-bronze);
+            border-bottom: 3px solid var(--antique-bronze);
+            text-align: center;
+        }
+
+        .construction-text {
+            color: var(--antique-bronze);
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+        }
+
         /* Shop Hero */
         .shop-hero {
-            padding: 8rem 2rem 4rem;
+            padding: 4rem 2rem;
             text-align: center;
             background: var(--pitch-black);
         }
@@ -464,6 +486,11 @@
             <li><a href="shop.html" class="active">Store</a></li>
         </ul>
     </nav>
+
+    <!-- Under Construction Banner -->
+    <div class="construction-banner">
+        <span class="construction-text display-font">🚧 Store Under Construction 🚧</span>
+    </div>
 
     <section class="shop-hero">
         <h1 class="shop-title display-font">The Supply</h1>
