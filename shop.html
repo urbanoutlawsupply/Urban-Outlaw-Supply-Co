@@ -27,7 +27,6 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 100px;
         }
 
         body {
@@ -90,7 +89,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
         .logo-badge::before {
@@ -117,7 +115,6 @@
             font-size: 0.85rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            opacity: 1;
             transition: color 0.3s ease;
         }
 
@@ -129,43 +126,37 @@
             color: var(--antique-bronze);
         }
 
-        /* Construction Banner */
-        .construction-banner {
-            background: repeating-linear-gradient(
-                45deg,
-                var(--pitch-black),
-                var(--pitch-black) 10px,
-                #1a1a1a 10px,
-                #1a1a1a 20px
-            );
-            border-top: 3px solid var(--warning);
-            border-bottom: 3px solid var(--warning);
-            padding: 1.5rem 2rem;
-            text-align: center;
-            margin-top: 81px;
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 101;
         }
 
-        .construction-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.3s ease;
         }
 
-        .construction-icon {
-            font-size: 1.5rem;
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
         }
 
-        .construction-text {
-            font-size: 1rem;
-            letter-spacing: 0.15em;
-            color: var(--warning);
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
         }
 
         /* Shop Hero */
         .shop-hero {
-            padding: 5rem 2rem;
+            padding: 8rem 2rem 4rem;
             text-align: center;
             background: var(--pitch-black);
         }
@@ -236,6 +227,14 @@
             transform: translateY(-5px);
         }
 
+        .category-card.featured {
+            border-color: var(--antique-bronze);
+        }
+
+        .category-card.featured::before {
+            transform: scaleX(1);
+        }
+
         .category-icon {
             font-size: 3rem;
             margin-bottom: 1.5rem;
@@ -263,6 +262,28 @@
             color: var(--warning);
             font-size: 0.75rem;
             letter-spacing: 0.15em;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--antique-bronze);
+            color: var(--pitch-black);
+        }
+
+        .btn-primary:hover {
+            background: var(--kraft);
         }
 
         /* Newsletter Section */
@@ -313,27 +334,6 @@
         .newsletter-input:focus {
             outline: none;
             border-color: var(--antique-bronze);
-        }
-
-        .btn {
-            padding: 1rem 2rem;
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--antique-bronze);
-            color: var(--pitch-black);
-        }
-
-        .btn-primary:hover {
-            background: var(--kraft);
         }
 
         /* Social Section */
@@ -389,34 +389,6 @@
         .footer-text a {
             color: var(--antique-bronze);
             text-decoration: none;
-        }
-
-        /* Hamburger Menu */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            cursor: pointer;
-            gap: 5px;
-            z-index: 101;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 2px;
-            background: var(--cream);
-            transition: all 0.3s ease;
-        }
-
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
         }
 
         /* Responsive */
@@ -493,27 +465,19 @@
         </ul>
     </nav>
 
-    <div class="construction-banner">
-        <div class="construction-content">
-            <span class="construction-icon">🚧</span>
-            <span class="construction-text display-font">Shop Under Construction — Coming Soon</span>
-            <span class="construction-icon">🚧</span>
-        </div>
-    </div>
-
     <section class="shop-hero">
         <h1 class="shop-title display-font">The Supply</h1>
         <p class="shop-subtitle">Custom notebooks, art prints, urban gear, and stationery. Built for outlaws.</p>
     </section>
 
     <section class="categories-section">
-        <h2 class="section-title display-font">What's Coming</h2>
+        <h2 class="section-title display-font">Shop Categories</h2>
         <div class="categories-grid">
-            <div class="category-card">
+            <div class="category-card featured">
                 <span class="category-icon">📓</span>
                 <h3 class="display-font">Custom Notebooks</h3>
                 <p>Laser-etched kraft journals, field notes, and sketchbooks. Raw materials, burned-in designs.</p>
-                <span class="coming-soon-tag display-font">Coming Soon</span>
+                <a href="notebooks.html" class="btn btn-primary display-font">Shop Now</a>
             </div>
             <div class="category-card">
                 <span class="category-icon">🖼️</span>
@@ -539,7 +503,7 @@
     <section class="newsletter-section">
         <div class="newsletter-content">
             <h2 class="newsletter-title display-font">Get Notified</h2>
-            <p class="newsletter-text">Be the first to know when the shop goes live. No spam, just the drop.</p>
+            <p class="newsletter-text">Be the first to know when new products drop. No spam, just the goods.</p>
             <form class="newsletter-form">
                 <input type="email" class="newsletter-input" placeholder="Your email address">
                 <button type="submit" class="btn btn-primary display-font">Notify Me</button>
@@ -548,7 +512,7 @@
     </section>
 
     <section class="social-section">
-        <p class="social-text">Follow the build in the meantime</p>
+        <p class="social-text">Follow the journey</p>
         <div class="social-links">
             <a href="https://www.instagram.com/urbanoutlawsupply/" target="_blank" class="social-link display-font">Instagram</a>
             <a href="https://www.facebook.com/urbanoutlawsupplyco/" target="_blank" class="social-link display-font">Facebook</a>

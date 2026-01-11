@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Notebooks | Urban Outlaw Supply Co.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pitch-black: #0a0a0a;
+            --antique-bronze: #a38b5c;
+            --gunmetal: #6b7280;
+            --kraft: #c4a574;
+            --cream: #f5f0e8;
+            --rust: #8b4513;
+            --concrete: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--pitch-black);
+            color: var(--cream);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.06;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .display-font {
+            font-family: 'Bebas Neue', Impact, sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10,10,10,0.95);
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-badge {
+            width: 48px;
+            height: 48px;
+            background: var(--antique-bronze);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-badge::before {
+            content: '★';
+            font-size: 1.5rem;
+            color: var(--pitch-black);
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            color: var(--cream);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--antique-bronze);
+        }
+
+        .nav-links a.active {
+            color: var(--antique-bronze);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            padding: 6rem 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb a {
+            color: var(--gunmetal);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--antique-bronze);
+        }
+
+        .breadcrumb span {
+            color: var(--gunmetal);
+            margin: 0 0.5rem;
+        }
+
+        .breadcrumb .current {
+            color: var(--cream);
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 2rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: var(--cream);
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--gunmetal);
+            font-style: italic;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Products Grid */
+        .products-section {
+            padding: 2rem 2rem 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: var(--concrete);
+            border: 1px solid #333;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            border-color: var(--antique-bronze);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            overflow: hidden;
+            background: #111;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.3rem;
+            color: var(--cream);
+            margin-bottom: 0.5rem;
+        }
+
+        .product-description {
+            font-size: 0.9rem;
+            color: var(--gunmetal);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            color: var(--kraft);
+            margin-bottom: 1rem;
+        }
+
+        .product-options {
+            margin-bottom: 1rem;
+        }
+
+        .option-label {
+            font-size: 0.8rem;
+            color: var(--gunmetal);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .option-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--pitch-black);
+            border: 1px solid #444;
+            color: var(--cream);
+            font-family: 'Source Serif 4', serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .option-select:focus {
+            outline: none;
+            border-color: var(--antique-bronze);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--antique-bronze);
+            color: var(--pitch-black);
+        }
+
+        .btn-primary:hover {
+            background: var(--kraft);
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 4rem 2rem;
+            background: var(--concrete);
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1rem;
+            color: var(--kraft);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.85rem;
+            color: var(--gunmetal);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: #050505;
+            border-top: 1px solid #1a1a1a;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--gunmetal);
+            font-size: 0.85rem;
+        }
+
+        .footer-text a {
+            color: var(--antique-bronze);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                border-left: 1px solid #333;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1.1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .breadcrumb {
+                padding: 5rem 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <div class="logo-badge"></div>
+            <span class="logo-text display-font">Urban Outlaw Supply</span>
+        </div>
+        <div class="hamburger" onclick="this.classList.toggle('active'); document.querySelector('.nav-links').classList.toggle('active');">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="the-build.html">The Build</a></li>
+            <li><a href="ethos.html">Ethos</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="gallery.html">The Archive</a></li>
+            <li><a href="shop.html" class="active">Store</a></li>
+        </ul>
+    </nav>
+
+    <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <a href="shop.html">Store</a>
+        <span>/</span>
+        <span class="current">Custom Notebooks</span>
+    </div>
+
+    <section class="page-header">
+        <h1 class="page-title display-font">Custom Notebooks</h1>
+        <p class="page-subtitle">Laser-etched kraft journals built for makers, storytellers, and those who put pen to paper.</p>
+    </section>
+
+    <section class="products-section">
+        <div class="products-grid">
+            
+            <!-- Product 1: A6 Lined -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/products/front-back-view.png" alt="A6 Kraft Notebook - Lined">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name display-font">A6 Kraft Journal — Lined</h3>
+                    <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Lined pages for notes and lists.</p>
+                    <div class="product-price">£3.99</div>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
+                        <input type="hidden" name="item_name" value="A6 Kraft Journal - Lined">
+                        <input type="hidden" name="amount" value="3.99">
+                        <input type="hidden" name="currency_code" value="GBP">
+                        <input type="hidden" name="shipping" value="1.50">
+                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product 2: A6 Dot Grid -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/products/torn-edge-band.png" alt="A6 Kraft Notebook - Dot Grid">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name display-font">A6 Kraft Journal — Dot Grid</h3>
+                    <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Dot grid pages for sketches and layouts.</p>
+                    <div class="product-price">£3.99</div>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
+                        <input type="hidden" name="item_name" value="A6 Kraft Journal - Dot Grid">
+                        <input type="hidden" name="amount" value="3.99">
+                        <input type="hidden" name="currency_code" value="GBP">
+                        <input type="hidden" name="shipping" value="1.50">
+                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product 3: A6 Blank -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/products/notebook-standing.png" alt="A6 Kraft Notebook - Blank">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name display-font">A6 Kraft Journal — Blank</h3>
+                    <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Blank pages for complete freedom.</p>
+                    <div class="product-price">£3.99</div>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
+                        <input type="hidden" name="item_name" value="A6 Kraft Journal - Blank">
+                        <input type="hidden" name="amount" value="3.99">
+                        <input type="hidden" name="currency_code" value="GBP">
+                        <input type="hidden" name="shipping" value="1.50">
+                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product 4: A5 Lined -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/products/we-all-have-a.png" alt="A5 Kraft Notebook - Lined">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name display-font">A5 Kraft Journal — Lined</h3>
+                    <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Lined pages for serious note-taking.</p>
+                    <div class="product-price">£5.99</div>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
+                        <input type="hidden" name="item_name" value="A5 Kraft Journal - Lined">
+                        <input type="hidden" name="amount" value="5.99">
+                        <input type="hidden" name="currency_code" value="GBP">
+                        <input type="hidden" name="shipping" value="1.50">
+                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product 5: A5 Dot Grid -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/products/inside-pages.png" alt="A5 Kraft Notebook - Dot Grid">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name display-font">A5 Kraft Journal — Dot Grid</h3>
+                    <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Dot grid pages for designers and planners.</p>
+                    <div class="product-price">£5.99</div>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
+                        <input type="hidden" name="item_name" value="A5 Kraft Journal - Dot Grid">
+                        <input type="hidden" name="amount" value="5.99">
+                        <input type="hidden" name="currency_code" value="GBP">
+                        <input type="hidden" name="shipping" value="1.50">
+                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product 6: A5 Blank Sketchbook -->
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="images/products/raw-utility-packaging.png" alt="A5 Kraft Sketchbook - Blank">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name display-font">A5 Kraft Sketchbook — Blank</h3>
+                    <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Thick blank pages for sketching and drawing.</p>
+                    <div class="product-price">£6.99</div>
+                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+                        <input type="hidden" name="cmd" value="_xclick">
+                        <input type="hidden" name="business" value="urbanoutlawsupply@gmail.com">
+                        <input type="hidden" name="item_name" value="A5 Kraft Sketchbook - Blank">
+                        <input type="hidden" name="amount" value="6.99">
+                        <input type="hidden" name="currency_code" value="GBP">
+                        <input type="hidden" name="shipping" value="1.50">
+                        <button type="submit" class="btn btn-primary display-font">Buy Now</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="features-grid">
+            <div class="feature">
+                <div class="feature-icon">🔥</div>
+                <h4 class="feature-title display-font">Laser-Etched</h4>
+                <p class="feature-text">Every design burned deep into the kraft fibre. Permanent. No two identical.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🇬🇧</div>
+                <h4 class="feature-title display-font">UK Designed</h4>
+                <p class="feature-text">Born in Portsmouth. 42 years of obsessive perfectionism in every detail.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📦</div>
+                <h4 class="feature-title display-font">Fast Shipping</h4>
+                <p class="feature-text">£1.50 UK shipping. Dispatched within 2-3 working days.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h4 class="feature-title display-font">Secure Payment</h4>
+                <p class="feature-text">PayPal checkout. Buy with confidence.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p class="footer-text">© 2026 Urban Outlaw Supply Co. | <a href="shop.html">Back to Store</a></p>
+    </footer>
+</body>
+</html>
