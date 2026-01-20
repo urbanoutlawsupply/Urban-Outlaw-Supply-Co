@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
-    <!-- PayPal SDK - Replace YOUR_CLIENT_ID with your actual PayPal Client ID -->
+    <!-- PayPal SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AXzG05HJqjzOrOoIrRrWcJBZ9zp-QKEpQeMUvP8ZHBpFQ_Yp_hZuFKQGta8K8DxIbWttcJ8MOpr4g4Kq&currency=GBP"></script>
     
     <style>
@@ -277,22 +277,140 @@
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .product-image {
+        /* Product Image Gallery */
+        .product-gallery {
+            position: relative;
             width: 100%;
             aspect-ratio: 1;
             overflow: hidden;
             background: #111;
         }
 
-        .product-image img {
+        .gallery-main {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .gallery-main img {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
+        .gallery-main img.active {
+            opacity: 1;
+        }
+
+        .gallery-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+        }
+
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 0;
+        }
+
+        .gallery-dot:hover {
+            background: rgba(255,255,255,0.7);
+        }
+
+        .gallery-dot.active {
+            background: var(--antique-bronze);
+            transform: scale(1.2);
+        }
+
+        .gallery-arrows {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0.5rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-gallery:hover .gallery-arrows {
+            opacity: 1;
+        }
+
+        .gallery-arrow {
+            width: 32px;
+            height: 32px;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #444;
+            color: var(--cream);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .gallery-arrow:hover {
+            background: rgba(0,0,0,0.8);
+            border-color: var(--antique-bronze);
+            color: var(--antique-bronze);
+        }
+
+        /* Thumbnails */
+        .gallery-thumbs {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            background: #111;
+            overflow-x: auto;
+        }
+
+        .gallery-thumb {
+            width: 50px;
+            height: 50px;
+            flex-shrink: 0;
+            cursor: pointer;
+            border: 2px solid transparent;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .gallery-thumb:hover {
+            opacity: 0.9;
+        }
+
+        .gallery-thumb.active {
+            border-color: var(--antique-bronze);
+            opacity: 1;
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .product-info {
@@ -695,6 +813,10 @@
             .cart-icon {
                 order: -1;
             }
+
+            .gallery-arrows {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -771,81 +893,138 @@
     <section class="products-section">
         <div class="products-grid">
             
-            <!-- Product 1: A6 Lined -->
+            <!-- ============================================
+                 PRODUCT 1: A6 Kraft Journal — Lined
+                 
+                 TO EDIT: Change image paths in data-images
+                 Images are comma-separated, first image shows first
+                 ============================================ -->
             <div class="product-card">
-                <div class="product-image">
-                    <img src="images/products/front-back-view.png" alt="A6 Kraft Notebook - Lined">
+                <div class="product-gallery" data-images="images/products/a6-lined-front.jpg,images/products/a6-lined-back.jpg,images/products/a6-lined-inside.jpg,images/products/a6-lined-detail.jpg">
+                    <div class="gallery-main">
+                        <!-- Images inserted by JavaScript -->
+                    </div>
+                    <div class="gallery-arrows">
+                        <button class="gallery-arrow gallery-prev">‹</button>
+                        <button class="gallery-arrow gallery-next">›</button>
+                    </div>
+                    <div class="gallery-nav">
+                        <!-- Dots inserted by JavaScript -->
+                    </div>
+                </div>
+                <div class="gallery-thumbs">
+                    <!-- Thumbnails inserted by JavaScript -->
                 </div>
                 <div class="product-info">
                     <h3 class="product-name display-font">A6 Kraft Journal — Lined</h3>
                     <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Lined pages for notes and lists.</p>
                     <div class="product-price">£3.99</div>
-                    <button class="btn btn-primary display-font" onclick="addToCart('a6-lined', 'A6 Kraft Journal — Lined', 3.99, 'images/products/front-back-view.png', this)">Add to Cart</button>
+                    <button class="btn btn-primary display-font" onclick="addToCart('a6-lined', 'A6 Kraft Journal — Lined', 3.99, 'images/products/a6-lined-front.jpg', this)">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Product 2: A6 Dot Grid -->
+            <!-- ============================================
+                 PRODUCT 2: A6 Kraft Journal — Dot Grid
+                 ============================================ -->
             <div class="product-card">
-                <div class="product-image">
-                    <img src="images/products/torn-edge-band.png" alt="A6 Kraft Notebook - Dot Grid">
+                <div class="product-gallery" data-images="images/products/a6-dotgrid-front.jpg,images/products/a6-dotgrid-back.jpg,images/products/a6-dotgrid-inside.jpg">
+                    <div class="gallery-main"></div>
+                    <div class="gallery-arrows">
+                        <button class="gallery-arrow gallery-prev">‹</button>
+                        <button class="gallery-arrow gallery-next">›</button>
+                    </div>
+                    <div class="gallery-nav"></div>
                 </div>
+                <div class="gallery-thumbs"></div>
                 <div class="product-info">
                     <h3 class="product-name display-font">A6 Kraft Journal — Dot Grid</h3>
                     <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Dot grid pages for sketches and layouts.</p>
                     <div class="product-price">£3.99</div>
-                    <button class="btn btn-primary display-font" onclick="addToCart('a6-dotgrid', 'A6 Kraft Journal — Dot Grid', 3.99, 'images/products/torn-edge-band.png', this)">Add to Cart</button>
+                    <button class="btn btn-primary display-font" onclick="addToCart('a6-dotgrid', 'A6 Kraft Journal — Dot Grid', 3.99, 'images/products/a6-dotgrid-front.jpg', this)">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Product 3: A6 Blank -->
+            <!-- ============================================
+                 PRODUCT 3: A6 Kraft Journal — Blank
+                 ============================================ -->
             <div class="product-card">
-                <div class="product-image">
-                    <img src="images/products/notebook-standing.png" alt="A6 Kraft Notebook - Blank">
+                <div class="product-gallery" data-images="images/products/a6-blank-front.jpg,images/products/a6-blank-back.jpg,images/products/a6-blank-inside.jpg">
+                    <div class="gallery-main"></div>
+                    <div class="gallery-arrows">
+                        <button class="gallery-arrow gallery-prev">‹</button>
+                        <button class="gallery-arrow gallery-next">›</button>
+                    </div>
+                    <div class="gallery-nav"></div>
                 </div>
+                <div class="gallery-thumbs"></div>
                 <div class="product-info">
                     <h3 class="product-name display-font">A6 Kraft Journal — Blank</h3>
                     <p class="product-description">Pocket-sized. Laser-etched kraft cover with torn-edge black band. Blank pages for complete freedom.</p>
                     <div class="product-price">£3.99</div>
-                    <button class="btn btn-primary display-font" onclick="addToCart('a6-blank', 'A6 Kraft Journal — Blank', 3.99, 'images/products/notebook-standing.png', this)">Add to Cart</button>
+                    <button class="btn btn-primary display-font" onclick="addToCart('a6-blank', 'A6 Kraft Journal — Blank', 3.99, 'images/products/a6-blank-front.jpg', this)">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Product 4: A5 Lined -->
+            <!-- ============================================
+                 PRODUCT 4: A5 Kraft Journal — Lined
+                 ============================================ -->
             <div class="product-card">
-                <div class="product-image">
-                    <img src="images/products/we-all-have-a.png" alt="A5 Kraft Notebook - Lined">
+                <div class="product-gallery" data-images="images/products/a5-lined-front.jpg,images/products/a5-lined-back.jpg,images/products/a5-lined-inside.jpg,images/products/a5-lined-detail.jpg">
+                    <div class="gallery-main"></div>
+                    <div class="gallery-arrows">
+                        <button class="gallery-arrow gallery-prev">‹</button>
+                        <button class="gallery-arrow gallery-next">›</button>
+                    </div>
+                    <div class="gallery-nav"></div>
                 </div>
+                <div class="gallery-thumbs"></div>
                 <div class="product-info">
                     <h3 class="product-name display-font">A5 Kraft Journal — Lined</h3>
                     <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Lined pages for serious note-taking.</p>
                     <div class="product-price">£5.99</div>
-                    <button class="btn btn-primary display-font" onclick="addToCart('a5-lined', 'A5 Kraft Journal — Lined', 5.99, 'images/products/we-all-have-a.png', this)">Add to Cart</button>
+                    <button class="btn btn-primary display-font" onclick="addToCart('a5-lined', 'A5 Kraft Journal — Lined', 5.99, 'images/products/a5-lined-front.jpg', this)">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Product 5: A5 Dot Grid -->
+            <!-- ============================================
+                 PRODUCT 5: A5 Kraft Journal — Dot Grid
+                 ============================================ -->
             <div class="product-card">
-                <div class="product-image">
-                    <img src="images/products/inside-pages.png" alt="A5 Kraft Notebook - Dot Grid">
+                <div class="product-gallery" data-images="images/products/a5-dotgrid-front.jpg,images/products/a5-dotgrid-back.jpg,images/products/a5-dotgrid-inside.jpg">
+                    <div class="gallery-main"></div>
+                    <div class="gallery-arrows">
+                        <button class="gallery-arrow gallery-prev">‹</button>
+                        <button class="gallery-arrow gallery-next">›</button>
+                    </div>
+                    <div class="gallery-nav"></div>
                 </div>
+                <div class="gallery-thumbs"></div>
                 <div class="product-info">
                     <h3 class="product-name display-font">A5 Kraft Journal — Dot Grid</h3>
                     <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Dot grid pages for designers and planners.</p>
                     <div class="product-price">£5.99</div>
-                    <button class="btn btn-primary display-font" onclick="addToCart('a5-dotgrid', 'A5 Kraft Journal — Dot Grid', 5.99, 'images/products/inside-pages.png', this)">Add to Cart</button>
+                    <button class="btn btn-primary display-font" onclick="addToCart('a5-dotgrid', 'A5 Kraft Journal — Dot Grid', 5.99, 'images/products/a5-dotgrid-front.jpg', this)">Add to Cart</button>
                 </div>
             </div>
 
-            <!-- Product 6: A5 Blank Sketchbook -->
+            <!-- ============================================
+                 PRODUCT 6: A5 Kraft Sketchbook — Blank
+                 ============================================ -->
             <div class="product-card">
-                <div class="product-image">
-                    <img src="images/products/raw-utility-packaging.png" alt="A5 Kraft Sketchbook - Blank">
+                <div class="product-gallery" data-images="images/products/a5-sketchbook-front.jpg,images/products/a5-sketchbook-back.jpg,images/products/a5-sketchbook-inside.jpg,images/products/a5-sketchbook-pages.jpg">
+                    <div class="gallery-main"></div>
+                    <div class="gallery-arrows">
+                        <button class="gallery-arrow gallery-prev">‹</button>
+                        <button class="gallery-arrow gallery-next">›</button>
+                    </div>
+                    <div class="gallery-nav"></div>
                 </div>
+                <div class="gallery-thumbs"></div>
                 <div class="product-info">
                     <h3 class="product-name display-font">A5 Kraft Sketchbook — Blank</h3>
                     <p class="product-description">Full-sized. Laser-etched kraft cover with torn-edge black band. Thick blank pages for sketching and drawing.</p>
                     <div class="product-price">£6.99</div>
-                    <button class="btn btn-primary display-font" onclick="addToCart('a5-sketchbook', 'A5 Kraft Sketchbook — Blank', 6.99, 'images/products/raw-utility-packaging.png', this)">Add to Cart</button>
+                    <button class="btn btn-primary display-font" onclick="addToCart('a5-sketchbook', 'A5 Kraft Sketchbook — Blank', 6.99, 'images/products/a5-sketchbook-front.jpg', this)">Add to Cart</button>
                 </div>
             </div>
 
@@ -885,24 +1064,117 @@
     <div class="toast" id="toast">Added to cart!</div>
 
     <script>
-        // Cart State
-        let cart = JSON.parse(localStorage.getItem('uos-cart')) || [];
-        const SHIPPING_COST = 1.50;
-
-        // Initialize cart on page load
+        // ================================================
+        // PRODUCT GALLERY SYSTEM
+        // ================================================
+        
         document.addEventListener('DOMContentLoaded', function() {
+            initGalleries();
             updateCartUI();
             renderPayPalButtons();
         });
 
-        // Toggle cart sidebar
+        function initGalleries() {
+            const galleries = document.querySelectorAll('.product-gallery');
+            
+            galleries.forEach((gallery, galleryIndex) => {
+                const imagesStr = gallery.dataset.images;
+                if (!imagesStr) return;
+                
+                const images = imagesStr.split(',').map(s => s.trim());
+                const mainContainer = gallery.querySelector('.gallery-main');
+                const navContainer = gallery.querySelector('.gallery-nav');
+                const thumbsContainer = gallery.parentElement.querySelector('.gallery-thumbs');
+                const prevBtn = gallery.querySelector('.gallery-prev');
+                const nextBtn = gallery.querySelector('.gallery-next');
+                
+                let currentIndex = 0;
+                
+                // Create main images
+                images.forEach((src, index) => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = `Product image ${index + 1}`;
+                    if (index === 0) img.classList.add('active');
+                    mainContainer.appendChild(img);
+                });
+                
+                // Create dots
+                images.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.className = 'gallery-dot' + (index === 0 ? ' active' : '');
+                    dot.onclick = () => goToSlide(index);
+                    navContainer.appendChild(dot);
+                });
+                
+                // Create thumbnails
+                if (thumbsContainer) {
+                    images.forEach((src, index) => {
+                        const thumb = document.createElement('div');
+                        thumb.className = 'gallery-thumb' + (index === 0 ? ' active' : '');
+                        thumb.innerHTML = `<img src="${src}" alt="Thumbnail ${index + 1}">`;
+                        thumb.onclick = () => goToSlide(index);
+                        thumbsContainer.appendChild(thumb);
+                    });
+                }
+                
+                // Navigation functions
+                function goToSlide(index) {
+                    currentIndex = index;
+                    updateGallery();
+                }
+                
+                function updateGallery() {
+                    // Update main images
+                    mainContainer.querySelectorAll('img').forEach((img, i) => {
+                        img.classList.toggle('active', i === currentIndex);
+                    });
+                    
+                    // Update dots
+                    navContainer.querySelectorAll('.gallery-dot').forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentIndex);
+                    });
+                    
+                    // Update thumbnails
+                    if (thumbsContainer) {
+                        thumbsContainer.querySelectorAll('.gallery-thumb').forEach((thumb, i) => {
+                            thumb.classList.toggle('active', i === currentIndex);
+                        });
+                    }
+                }
+                
+                // Arrow navigation
+                if (prevBtn) {
+                    prevBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        currentIndex = (currentIndex - 1 + images.length) % images.length;
+                        updateGallery();
+                    };
+                }
+                
+                if (nextBtn) {
+                    nextBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        currentIndex = (currentIndex + 1) % images.length;
+                        updateGallery();
+                    };
+                }
+            });
+        }
+
+        // ================================================
+        // CART SYSTEM
+        // ================================================
+        
+        let cart = JSON.parse(localStorage.getItem('uos-cart')) || [];
+        const SHIPPING_COST = 1.50;
+
         function toggleCart() {
             document.getElementById('cart-overlay').classList.toggle('active');
             document.getElementById('cart-sidebar').classList.toggle('active');
             document.body.style.overflow = document.getElementById('cart-sidebar').classList.contains('active') ? 'hidden' : '';
         }
 
-        // Add item to cart
         function addToCart(id, name, price, image, buttonEl) {
             const existingItem = cart.find(item => item.id === id);
             
@@ -916,7 +1188,6 @@
             updateCartUI();
             showToast('Added to cart!');
             
-            // Button feedback
             if (buttonEl) {
                 const originalText = buttonEl.textContent;
                 buttonEl.textContent = '✓ Added';
@@ -928,14 +1199,12 @@
             }
         }
 
-        // Remove item from cart
         function removeFromCart(id) {
             cart = cart.filter(item => item.id !== id);
             saveCart();
             updateCartUI();
         }
 
-        // Update quantity
         function updateQty(id, change) {
             const item = cart.find(item => item.id === id);
             if (item) {
@@ -949,12 +1218,10 @@
             }
         }
 
-        // Save cart to localStorage
         function saveCart() {
             localStorage.setItem('uos-cart', JSON.stringify(cart));
         }
 
-        // Calculate totals
         function getSubtotal() {
             return cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         }
@@ -968,7 +1235,6 @@
             return cart.reduce((sum, item) => sum + item.qty, 0);
         }
 
-        // Update cart UI
         function updateCartUI() {
             const cartItemsEl = document.getElementById('cart-items');
             const cartFooterEl = document.getElementById('cart-footer');
@@ -976,12 +1242,10 @@
             const subtotalEl = document.getElementById('cart-subtotal');
             const totalEl = document.getElementById('cart-total');
             
-            // Update cart count
             const totalItems = getTotalItems();
             cartCountEl.textContent = totalItems;
             cartCountEl.classList.toggle('hidden', totalItems === 0);
             
-            // Render cart items
             if (cart.length === 0) {
                 cartItemsEl.innerHTML = `
                     <div class="cart-empty">
@@ -1015,7 +1279,6 @@
             }
         }
 
-        // Show toast notification
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -1023,11 +1286,13 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
 
-        // PayPal Integration
+        // ================================================
+        // PAYPAL INTEGRATION
+        // ================================================
+        
         function renderPayPalButtons() {
             const container = document.getElementById('paypal-button-container');
             
-            // Check if PayPal SDK loaded
             if (typeof paypal === 'undefined') {
                 container.innerHTML = '<p class="paypal-loading">PayPal loading...</p>';
                 return;
@@ -1078,12 +1343,9 @@
                 
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                        // Clear cart
                         cart = [];
                         saveCart();
                         updateCartUI();
-                        
-                        // Show success
                         alert('Payment successful! Thank you, ' + details.payer.name.given_name + '. Your order is confirmed.');
                         toggleCart();
                     });
