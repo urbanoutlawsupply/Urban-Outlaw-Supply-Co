@@ -1,0 +1,2044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Project Logger | Urban Outlaw Supply Co.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pitch-black: #0a0a0a;
+            --antique-bronze: #a38b5c;
+            --gunmetal: #6b7280;
+            --kraft: #c4a574;
+            --cream: #f5f0e8;
+            --rust: #8b4513;
+            --concrete: #1a1a1a;
+            --success: #4a7c4e;
+            --warning: #d4a843;
+            --danger: #8b3a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            background: var(--pitch-black);
+            color: var(--cream);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .display-font {
+            font-family: 'Bebas Neue', Impact, sans-serif;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(10,10,10,0.95);
+            border-bottom: 1px solid #222;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-badge {
+            width: 48px;
+            height: 48px;
+            background: var(--antique-bronze);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-badge::before {
+            content: '\2605';
+            font-size: 1.5rem;
+            color: var(--pitch-black);
+        }
+
+        .logo-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--antique-bronze);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 101;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--cream);
+            transition: all 0.3s ease;
+        }
+
+        /* Main Container */
+        .main-container {
+            padding: 100px 2rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--antique-bronze);
+            color: var(--pitch-black);
+        }
+
+        .btn-primary:hover {
+            background: var(--kraft);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--cream);
+            border: 1px solid var(--gunmetal);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--antique-bronze);
+            color: var(--antique-bronze);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: var(--cream);
+        }
+
+        .btn-danger:hover {
+            background: #a04444;
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            background: linear-gradient(135deg, var(--antique-bronze), var(--kraft));
+            color: var(--pitch-black);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-family: 'Bebas Neue', sans-serif;
+            border-radius: 2px;
+        }
+
+        /* Project Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: var(--concrete);
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            border-color: var(--antique-bronze);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card-image {
+            width: 100%;
+            height: 200px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .project-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-card-image .no-image {
+            color: var(--gunmetal);
+            font-size: 3rem;
+        }
+
+        .project-card-content {
+            padding: 1.5rem;
+        }
+
+        .project-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-card h3 {
+            font-size: 1.3rem;
+            color: var(--kraft);
+        }
+
+        .project-status {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+
+        .status-planning {
+            background: var(--gunmetal);
+            color: var(--cream);
+        }
+
+        .status-in-progress {
+            background: var(--warning);
+            color: var(--pitch-black);
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: var(--cream);
+        }
+
+        .project-card-description {
+            color: var(--gunmetal);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--gunmetal);
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+
+        .project-card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--concrete);
+            border: 1px dashed #444;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            color: var(--kraft);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: var(--gunmetal);
+            margin-bottom: 2rem;
+        }
+
+        /* Project Detail View */
+        .project-detail {
+            display: none;
+        }
+
+        .project-detail.active {
+            display: block;
+        }
+
+        .projects-list {
+            display: block;
+        }
+
+        .projects-list.hidden {
+            display: none;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gunmetal);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--antique-bronze);
+        }
+
+        .project-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .project-detail-header h1 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            color: var(--kraft);
+        }
+
+        .project-detail-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: transparent;
+            border: none;
+            color: var(--gunmetal);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: var(--cream);
+        }
+
+        .tab.active {
+            color: var(--antique-bronze);
+            border-bottom-color: var(--antique-bronze);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Photo Gallery */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            background: #222;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .photo-item .delete-photo {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 30px;
+            height: 30px;
+            background: rgba(139, 58, 58, 0.9);
+            border: none;
+            color: var(--cream);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .photo-item:hover .delete-photo {
+            display: flex;
+        }
+
+        .add-photo-card {
+            aspect-ratio: 1;
+            background: var(--concrete);
+            border: 2px dashed #444;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-photo-card:hover {
+            border-color: var(--antique-bronze);
+            background: #222;
+        }
+
+        .add-photo-card span {
+            font-size: 2rem;
+            color: var(--gunmetal);
+        }
+
+        .add-photo-card p {
+            font-size: 0.85rem;
+            color: var(--gunmetal);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #333;
+        }
+
+        .timeline-entry {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-entry::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--antique-bronze);
+            border-radius: 50%;
+            transform: translateX(-4px);
+        }
+
+        .timeline-entry-date {
+            font-size: 0.8rem;
+            color: var(--gunmetal);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-entry-content {
+            background: var(--concrete);
+            padding: 1rem;
+            border: 1px solid #333;
+        }
+
+        .timeline-entry-content h4 {
+            color: var(--kraft);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-entry-content p {
+            color: var(--cream);
+            font-size: 0.9rem;
+        }
+
+        .timeline-entry-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .timeline-entry-actions button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            background: transparent;
+            border: 1px solid #444;
+            color: var(--gunmetal);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-entry-actions button:hover {
+            border-color: var(--antique-bronze);
+            color: var(--antique-bronze);
+        }
+
+        /* Materials & Tools List */
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr auto auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--concrete);
+            border: 1px solid #333;
+        }
+
+        .item-row .item-name {
+            font-weight: 600;
+        }
+
+        .item-row .item-quantity {
+            color: var(--gunmetal);
+            font-size: 0.9rem;
+        }
+
+        .item-row .item-cost {
+            color: var(--kraft);
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .item-row .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .item-row .item-actions button {
+            padding: 0.25rem 0.5rem;
+            background: transparent;
+            border: 1px solid #444;
+            color: var(--gunmetal);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .item-row .item-actions button:hover {
+            border-color: var(--antique-bronze);
+            color: var(--antique-bronze);
+        }
+
+        /* Cost Summary */
+        .cost-summary {
+            background: var(--concrete);
+            border: 1px solid #333;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .cost-summary h4 {
+            color: var(--kraft);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .cost-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--kraft);
+        }
+
+        .cost-row span:last-child {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* Notes Section */
+        .notes-container {
+            background: var(--concrete);
+            border: 1px solid #333;
+            padding: 1.5rem;
+        }
+
+        .notes-container textarea {
+            width: 100%;
+            min-height: 200px;
+            background: var(--pitch-black);
+            border: 1px solid #444;
+            color: var(--cream);
+            padding: 1rem;
+            font-family: 'Source Serif 4', serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .notes-container textarea:focus {
+            outline: none;
+            border-color: var(--antique-bronze);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--concrete);
+            border: 1px solid #333;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--gunmetal);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--cream);
+        }
+
+        .modal h3 {
+            font-size: 1.5rem;
+            color: var(--kraft);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--gunmetal);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--pitch-black);
+            border: 1px solid #444;
+            color: var(--cream);
+            font-family: 'Source Serif 4', serif;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--antique-bronze);
+        }
+
+        .form-group select {
+            cursor: pointer;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        /* Photo Lightbox */
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 300;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(163, 139, 92, 0.8);
+            border: none;
+            color: var(--pitch-black);
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--kraft);
+        }
+
+        .lightbox-prev {
+            left: 2rem;
+        }
+
+        .lightbox-next {
+            right: 2rem;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: var(--cream);
+            padding: 1rem 2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.1em;
+            z-index: 400;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Premium Features Section */
+        .premium-section {
+            background: linear-gradient(135deg, rgba(163, 139, 92, 0.1), rgba(196, 165, 116, 0.05));
+            border: 1px solid var(--antique-bronze);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .premium-section h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--kraft);
+            margin-bottom: 1rem;
+        }
+
+        .premium-section p {
+            color: var(--gunmetal);
+            margin-bottom: 1.5rem;
+        }
+
+        .premium-features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .premium-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--cream);
+            font-size: 0.9rem;
+        }
+
+        .premium-feature::before {
+            content: '\2713';
+            color: var(--antique-bronze);
+        }
+
+        /* Share Modal */
+        .share-link-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .share-link-container input {
+            flex: 1;
+            background: var(--pitch-black);
+            border: 1px solid #444;
+            color: var(--cream);
+            padding: 0.75rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        /* Print Styles */
+        .print-card {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            body::before,
+            nav,
+            .tabs,
+            .btn,
+            .modal-overlay,
+            .lightbox,
+            .toast,
+            .header-actions,
+            .project-detail-actions {
+                display: none !important;
+            }
+
+            .main-container {
+                padding: 0;
+            }
+
+            .print-card {
+                display: block;
+                page-break-inside: avoid;
+            }
+
+            .project-detail-header h1 {
+                color: black;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                height: 100vh;
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 2rem;
+                transition: right 0.3s ease;
+                border-left: 1px solid #333;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .main-container {
+                padding: 90px 1rem 3rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .item-row .item-actions {
+                justify-content: flex-start;
+            }
+
+            .tabs {
+                gap: 0;
+            }
+
+            .tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <a href="index.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: inherit;">
+                <div class="logo-badge"></div>
+                <span class="logo-text display-font">Urban Outlaw Supply</span>
+            </a>
+        </div>
+        <div class="hamburger" onclick="this.classList.toggle('active'); document.querySelector('.nav-links').classList.toggle('active');">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="the-build.html">The Build</a></li>
+            <li><a href="gallery.html">The Workshop</a></li>
+            <li><a href="project-logger.html" class="active">Project Logger</a></li>
+            <li><a href="shop.html">Store</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-container">
+        <!-- Projects List View -->
+        <div class="projects-list" id="projects-list">
+            <div class="page-header">
+                <h1 class="display-font">Workshop Project Logger</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="openNewProjectModal()">+ New Project</button>
+                </div>
+            </div>
+
+            <div id="projects-grid" class="projects-grid">
+                <!-- Projects will be rendered here -->
+            </div>
+
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <h3 class="display-font">No Projects Yet</h3>
+                <p>Start documenting your builds and projects. Track progress, materials, and costs.</p>
+                <button class="btn btn-primary" onclick="openNewProjectModal()">Create Your First Project</button>
+            </div>
+        </div>
+
+        <!-- Project Detail View -->
+        <div class="project-detail" id="project-detail">
+            <a href="#" class="back-link" onclick="showProjectsList(); return false;">
+                &larr; Back to Projects
+            </a>
+
+            <div class="project-detail-header">
+                <div>
+                    <h1 class="display-font" id="detail-title">Project Name</h1>
+                    <p style="color: var(--gunmetal); margin-top: 0.5rem;" id="detail-description">Project description</p>
+                </div>
+                <div class="project-detail-actions">
+                    <button class="btn btn-outline btn-small" onclick="openEditProjectModal()">Edit</button>
+                    <button class="btn btn-outline btn-small" onclick="openShareModal()">
+                        Share <span class="premium-badge">Premium</span>
+                    </button>
+                    <button class="btn btn-outline btn-small" onclick="printProjectCard()">
+                        Print <span class="premium-badge">Premium</span>
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="deleteCurrentProject()">Delete</button>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+                <button class="tab" data-tab="photos" onclick="switchTab('photos')">Photos</button>
+                <button class="tab" data-tab="timeline" onclick="switchTab('timeline')">Timeline</button>
+                <button class="tab" data-tab="materials" onclick="switchTab('materials')">Materials</button>
+                <button class="tab" data-tab="tools" onclick="switchTab('tools')">Tools</button>
+                <button class="tab" data-tab="notes" onclick="switchTab('notes')">Notes</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div class="tab-content active" id="tab-overview">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="cost-summary">
+                        <h4 class="display-font">Status</h4>
+                        <p id="detail-status" style="font-size: 1.1rem; color: var(--cream);"></p>
+                    </div>
+                    <div class="cost-summary">
+                        <h4 class="display-font">Started</h4>
+                        <p id="detail-start-date" style="font-size: 1.1rem; color: var(--cream);"></p>
+                    </div>
+                    <div class="cost-summary">
+                        <h4 class="display-font">Total Cost</h4>
+                        <p id="detail-total-cost" style="font-size: 1.5rem; color: var(--kraft); font-family: 'Bebas Neue', sans-serif;"></p>
+                    </div>
+                </div>
+
+                <div class="cost-summary">
+                    <h4 class="display-font">Cost Breakdown</h4>
+                    <div class="cost-row">
+                        <span>Materials</span>
+                        <span id="overview-materials-cost">$0.00</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>Tools</span>
+                        <span id="overview-tools-cost">$0.00</span>
+                    </div>
+                    <div class="cost-row">
+                        <span>Total</span>
+                        <span id="overview-total-cost">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="premium-section">
+                    <h4 class="display-font"><span class="premium-badge">Premium</span> Unlock More</h4>
+                    <p>Get the full Workshop Project Logger experience with premium features.</p>
+                    <div class="premium-features-list">
+                        <div class="premium-feature">Share builds publicly</div>
+                        <div class="premium-feature">Print project cards</div>
+                        <div class="premium-feature">Export to PDF</div>
+                        <div class="premium-feature">Unlimited photos</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photos Tab -->
+            <div class="tab-content" id="tab-photos">
+                <div class="photo-gallery" id="photo-gallery">
+                    <div class="add-photo-card" onclick="document.getElementById('photo-input').click()">
+                        <span>+</span>
+                        <p>Add Photo</p>
+                    </div>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
+            </div>
+
+            <!-- Timeline Tab -->
+            <div class="tab-content" id="tab-timeline">
+                <button class="btn btn-primary" style="margin-bottom: 2rem;" onclick="openAddTimelineModal()">+ Add Entry</button>
+                <div class="timeline" id="timeline-container">
+                    <!-- Timeline entries will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Materials Tab -->
+            <div class="tab-content" id="tab-materials">
+                <button class="btn btn-primary" style="margin-bottom: 2rem;" onclick="openAddMaterialModal()">+ Add Material</button>
+                <div class="items-list" id="materials-list">
+                    <!-- Materials will be rendered here -->
+                </div>
+                <div class="cost-summary">
+                    <h4 class="display-font">Materials Total</h4>
+                    <div class="cost-row">
+                        <span>Total Cost</span>
+                        <span id="materials-total">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div class="tab-content" id="tab-tools">
+                <button class="btn btn-primary" style="margin-bottom: 2rem;" onclick="openAddToolModal()">+ Add Tool</button>
+                <div class="items-list" id="tools-list">
+                    <!-- Tools will be rendered here -->
+                </div>
+                <div class="cost-summary">
+                    <h4 class="display-font">Tools Total</h4>
+                    <div class="cost-row">
+                        <span>Total Cost</span>
+                        <span id="tools-total">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notes Tab -->
+            <div class="tab-content" id="tab-notes">
+                <div class="notes-container">
+                    <textarea id="project-notes" placeholder="Add your project notes here..." onchange="saveNotes()"></textarea>
+                </div>
+                <button class="btn btn-primary" style="margin-top: 1rem;" onclick="saveNotes()">Save Notes</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- New/Edit Project Modal -->
+    <div class="modal-overlay" id="project-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('project-modal')">&times;</button>
+            <h3 class="display-font" id="project-modal-title">New Project</h3>
+            <form id="project-form" onsubmit="saveProject(event)">
+                <input type="hidden" id="project-id">
+                <div class="form-group">
+                    <label>Project Name</label>
+                    <input type="text" id="project-name" required placeholder="Enter project name">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="project-description" placeholder="Describe your project"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="project-status">
+                        <option value="planning">Planning</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="project-start-date">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('project-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Timeline Entry Modal -->
+    <div class="modal-overlay" id="timeline-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('timeline-modal')">&times;</button>
+            <h3 class="display-font">Add Timeline Entry</h3>
+            <form id="timeline-form" onsubmit="saveTimelineEntry(event)">
+                <input type="hidden" id="timeline-id">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="timeline-title" required placeholder="What did you do?">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="timeline-description" placeholder="Describe this step in detail"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="timeline-date">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('timeline-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Material Modal -->
+    <div class="modal-overlay" id="material-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('material-modal')">&times;</button>
+            <h3 class="display-font">Add Material</h3>
+            <form id="material-form" onsubmit="saveMaterial(event)">
+                <input type="hidden" id="material-id">
+                <div class="form-group">
+                    <label>Material Name</label>
+                    <input type="text" id="material-name" required placeholder="e.g., Oak Wood Planks">
+                </div>
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="text" id="material-quantity" placeholder="e.g., 10 boards, 5 lbs">
+                </div>
+                <div class="form-group">
+                    <label>Cost ($)</label>
+                    <input type="number" id="material-cost" step="0.01" min="0" placeholder="0.00">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('material-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Material</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Tool Modal -->
+    <div class="modal-overlay" id="tool-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('tool-modal')">&times;</button>
+            <h3 class="display-font">Add Tool</h3>
+            <form id="tool-form" onsubmit="saveTool(event)">
+                <input type="hidden" id="tool-id">
+                <div class="form-group">
+                    <label>Tool Name</label>
+                    <input type="text" id="tool-name" required placeholder="e.g., Circular Saw">
+                </div>
+                <div class="form-group">
+                    <label>Owned / Purchased / Rented</label>
+                    <select id="tool-ownership">
+                        <option value="owned">Already Owned</option>
+                        <option value="purchased">Purchased for Project</option>
+                        <option value="rented">Rented</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cost ($)</label>
+                    <input type="number" id="tool-cost" step="0.01" min="0" placeholder="0.00">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('tool-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Tool</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Share Modal (Premium) -->
+    <div class="modal-overlay" id="share-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal('share-modal')">&times;</button>
+            <h3 class="display-font"><span class="premium-badge">Premium</span> Share Project</h3>
+            <p style="color: var(--gunmetal); margin-bottom: 1.5rem;">Share your project publicly with a unique link.</p>
+            <div class="form-group">
+                <label>Public Link</label>
+                <div class="share-link-container">
+                    <input type="text" id="share-link" readonly value="https://urbanoutlawsupply.com/projects/abc123">
+                    <button class="btn btn-primary btn-small" onclick="copyShareLink()">Copy</button>
+                </div>
+            </div>
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(163, 139, 92, 0.1); border: 1px solid var(--antique-bronze);">
+                <p style="color: var(--cream); font-size: 0.9rem;">This is a premium feature. Upgrade to share your builds publicly and let others learn from your projects.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Photo Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">&larr;</button>
+        <img id="lightbox-image" src="" alt="Project photo">
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">&rarr;</button>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Saved!</div>
+
+    <script>
+        // Storage key
+        const STORAGE_KEY = 'uos-project-logger';
+
+        // State
+        let projects = [];
+        let currentProjectId = null;
+        let currentLightboxIndex = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjects();
+            renderProjectsList();
+
+            // Set default date to today for new entries
+            document.getElementById('project-start-date').valueAsDate = new Date();
+            document.getElementById('timeline-date').valueAsDate = new Date();
+        });
+
+        // Storage Functions
+        function loadProjects() {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            projects = stored ? JSON.parse(stored) : [];
+        }
+
+        function saveProjects() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+        }
+
+        // Generate unique ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Projects List
+        function renderProjectsList() {
+            const grid = document.getElementById('projects-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            if (projects.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            grid.innerHTML = projects.map(project => {
+                const totalCost = calculateProjectCost(project);
+                const photoCount = (project.photos || []).length;
+                const coverPhoto = project.photos && project.photos.length > 0 ? project.photos[0] : null;
+
+                return `
+                    <div class="project-card" onclick="openProject('${project.id}')">
+                        <div class="project-card-image">
+                            ${coverPhoto
+                                ? `<img src="${coverPhoto}" alt="${project.name}">`
+                                : `<span class="no-image">&#9881;</span>`
+                            }
+                        </div>
+                        <div class="project-card-content">
+                            <div class="project-card-header">
+                                <h3 class="display-font">${escapeHtml(project.name)}</h3>
+                                <span class="project-status status-${project.status}">${formatStatus(project.status)}</span>
+                            </div>
+                            <p class="project-card-description">${escapeHtml(project.description || 'No description')}</p>
+                            <div class="project-card-meta">
+                                <span>&#128247; ${photoCount} photos</span>
+                                <span>$${totalCost.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'planning': 'Planning',
+                'in-progress': 'In Progress',
+                'completed': 'Completed'
+            };
+            return statusMap[status] || status;
+        }
+
+        function calculateProjectCost(project) {
+            const materialsCost = (project.materials || []).reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+            const toolsCost = (project.tools || []).reduce((sum, t) => sum + (parseFloat(t.cost) || 0), 0);
+            return materialsCost + toolsCost;
+        }
+
+        // Project CRUD
+        function openNewProjectModal() {
+            document.getElementById('project-modal-title').textContent = 'New Project';
+            document.getElementById('project-form').reset();
+            document.getElementById('project-id').value = '';
+            document.getElementById('project-start-date').valueAsDate = new Date();
+            openModal('project-modal');
+        }
+
+        function openEditProjectModal() {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            document.getElementById('project-modal-title').textContent = 'Edit Project';
+            document.getElementById('project-id').value = project.id;
+            document.getElementById('project-name').value = project.name;
+            document.getElementById('project-description').value = project.description || '';
+            document.getElementById('project-status').value = project.status;
+            document.getElementById('project-start-date').value = project.startDate || '';
+            openModal('project-modal');
+        }
+
+        function saveProject(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('project-id').value;
+            const projectData = {
+                name: document.getElementById('project-name').value,
+                description: document.getElementById('project-description').value,
+                status: document.getElementById('project-status').value,
+                startDate: document.getElementById('project-start-date').value
+            };
+
+            if (id) {
+                // Update existing
+                const index = projects.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    projects[index] = { ...projects[index], ...projectData };
+                }
+            } else {
+                // Create new
+                const newProject = {
+                    id: generateId(),
+                    ...projectData,
+                    photos: [],
+                    timeline: [],
+                    materials: [],
+                    tools: [],
+                    notes: '',
+                    createdAt: new Date().toISOString()
+                };
+                projects.unshift(newProject);
+            }
+
+            saveProjects();
+            closeModal('project-modal');
+            renderProjectsList();
+
+            if (currentProjectId) {
+                renderProjectDetail();
+            }
+
+            showToast('Project saved!');
+        }
+
+        function deleteCurrentProject() {
+            if (!confirm('Are you sure you want to delete this project? This cannot be undone.')) return;
+
+            projects = projects.filter(p => p.id !== currentProjectId);
+            saveProjects();
+            showProjectsList();
+            showToast('Project deleted');
+        }
+
+        // Project Detail View
+        function openProject(projectId) {
+            currentProjectId = projectId;
+            document.getElementById('projects-list').classList.add('hidden');
+            document.getElementById('project-detail').classList.add('active');
+            renderProjectDetail();
+        }
+
+        function showProjectsList() {
+            currentProjectId = null;
+            document.getElementById('projects-list').classList.remove('hidden');
+            document.getElementById('project-detail').classList.remove('active');
+            renderProjectsList();
+        }
+
+        function renderProjectDetail() {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            // Header info
+            document.getElementById('detail-title').textContent = project.name;
+            document.getElementById('detail-description').textContent = project.description || 'No description';
+            document.getElementById('detail-status').textContent = formatStatus(project.status);
+            document.getElementById('detail-start-date').textContent = project.startDate
+                ? new Date(project.startDate).toLocaleDateString()
+                : 'Not set';
+
+            // Cost calculations
+            const materialsCost = (project.materials || []).reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+            const toolsCost = (project.tools || []).reduce((sum, t) => sum + (parseFloat(t.cost) || 0), 0);
+            const totalCost = materialsCost + toolsCost;
+
+            document.getElementById('detail-total-cost').textContent = `$${totalCost.toFixed(2)}`;
+            document.getElementById('overview-materials-cost').textContent = `$${materialsCost.toFixed(2)}`;
+            document.getElementById('overview-tools-cost').textContent = `$${toolsCost.toFixed(2)}`;
+            document.getElementById('overview-total-cost').textContent = `$${totalCost.toFixed(2)}`;
+
+            // Render all tabs content
+            renderPhotos(project);
+            renderTimeline(project);
+            renderMaterials(project);
+            renderTools(project);
+
+            // Notes
+            document.getElementById('project-notes').value = project.notes || '';
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `tab-${tabName}`);
+            });
+        }
+
+        // Photos
+        function renderPhotos(project) {
+            const gallery = document.getElementById('photo-gallery');
+            const photos = project.photos || [];
+
+            gallery.innerHTML = photos.map((photo, index) => `
+                <div class="photo-item" onclick="openLightbox(${index})">
+                    <img src="${photo}" alt="Project photo ${index + 1}">
+                    <button class="delete-photo" onclick="event.stopPropagation(); deletePhoto(${index})">&times;</button>
+                </div>
+            `).join('') + `
+                <div class="add-photo-card" onclick="document.getElementById('photo-input').click()">
+                    <span>+</span>
+                    <p>Add Photo</p>
+                </div>
+            `;
+        }
+
+        function handlePhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const project = projects.find(p => p.id === currentProjectId);
+                if (!project) return;
+
+                if (!project.photos) project.photos = [];
+                project.photos.push(e.target.result);
+                saveProjects();
+                renderPhotos(project);
+                showToast('Photo added!');
+            };
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        function deletePhoto(index) {
+            if (!confirm('Delete this photo?')) return;
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project || !project.photos) return;
+
+            project.photos.splice(index, 1);
+            saveProjects();
+            renderPhotos(project);
+            showToast('Photo deleted');
+        }
+
+        // Lightbox
+        function openLightbox(index) {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project || !project.photos || project.photos.length === 0) return;
+
+            currentLightboxIndex = index;
+            document.getElementById('lightbox-image').src = project.photos[index];
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function navigateLightbox(direction) {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project || !project.photos) return;
+
+            currentLightboxIndex += direction;
+            if (currentLightboxIndex < 0) currentLightboxIndex = project.photos.length - 1;
+            if (currentLightboxIndex >= project.photos.length) currentLightboxIndex = 0;
+
+            document.getElementById('lightbox-image').src = project.photos[currentLightboxIndex];
+        }
+
+        // Timeline
+        function renderTimeline(project) {
+            const container = document.getElementById('timeline-container');
+            const timeline = project.timeline || [];
+
+            if (timeline.length === 0) {
+                container.innerHTML = '<p style="color: var(--gunmetal);">No timeline entries yet. Add your first entry to start tracking progress.</p>';
+                return;
+            }
+
+            // Sort by date descending
+            const sorted = [...timeline].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            container.innerHTML = sorted.map(entry => `
+                <div class="timeline-entry">
+                    <div class="timeline-entry-date">${new Date(entry.date).toLocaleDateString()}</div>
+                    <div class="timeline-entry-content">
+                        <h4 class="display-font">${escapeHtml(entry.title)}</h4>
+                        <p>${escapeHtml(entry.description || '')}</p>
+                        <div class="timeline-entry-actions">
+                            <button onclick="editTimelineEntry('${entry.id}')">Edit</button>
+                            <button onclick="deleteTimelineEntry('${entry.id}')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddTimelineModal() {
+            document.getElementById('timeline-form').reset();
+            document.getElementById('timeline-id').value = '';
+            document.getElementById('timeline-date').valueAsDate = new Date();
+            openModal('timeline-modal');
+        }
+
+        function editTimelineEntry(entryId) {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            const entry = project.timeline.find(e => e.id === entryId);
+            if (!entry) return;
+
+            document.getElementById('timeline-id').value = entry.id;
+            document.getElementById('timeline-title').value = entry.title;
+            document.getElementById('timeline-description').value = entry.description || '';
+            document.getElementById('timeline-date').value = entry.date;
+            openModal('timeline-modal');
+        }
+
+        function saveTimelineEntry(event) {
+            event.preventDefault();
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            if (!project.timeline) project.timeline = [];
+
+            const id = document.getElementById('timeline-id').value;
+            const entryData = {
+                title: document.getElementById('timeline-title').value,
+                description: document.getElementById('timeline-description').value,
+                date: document.getElementById('timeline-date').value || new Date().toISOString().split('T')[0]
+            };
+
+            if (id) {
+                const index = project.timeline.findIndex(e => e.id === id);
+                if (index !== -1) {
+                    project.timeline[index] = { ...project.timeline[index], ...entryData };
+                }
+            } else {
+                project.timeline.push({ id: generateId(), ...entryData });
+            }
+
+            saveProjects();
+            closeModal('timeline-modal');
+            renderTimeline(project);
+            showToast('Entry saved!');
+        }
+
+        function deleteTimelineEntry(entryId) {
+            if (!confirm('Delete this entry?')) return;
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            project.timeline = project.timeline.filter(e => e.id !== entryId);
+            saveProjects();
+            renderTimeline(project);
+            showToast('Entry deleted');
+        }
+
+        // Materials
+        function renderMaterials(project) {
+            const container = document.getElementById('materials-list');
+            const materials = project.materials || [];
+
+            if (materials.length === 0) {
+                container.innerHTML = '<p style="color: var(--gunmetal);">No materials added yet.</p>';
+                document.getElementById('materials-total').textContent = '$0.00';
+                return;
+            }
+
+            const total = materials.reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+            document.getElementById('materials-total').textContent = `$${total.toFixed(2)}`;
+
+            container.innerHTML = materials.map(material => `
+                <div class="item-row">
+                    <span class="item-name">${escapeHtml(material.name)}</span>
+                    <span class="item-quantity">${escapeHtml(material.quantity || '-')}</span>
+                    <span class="item-cost">$${(parseFloat(material.cost) || 0).toFixed(2)}</span>
+                    <div class="item-actions">
+                        <button onclick="editMaterial('${material.id}')">Edit</button>
+                        <button onclick="deleteMaterial('${material.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddMaterialModal() {
+            document.getElementById('material-form').reset();
+            document.getElementById('material-id').value = '';
+            openModal('material-modal');
+        }
+
+        function editMaterial(materialId) {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            const material = project.materials.find(m => m.id === materialId);
+            if (!material) return;
+
+            document.getElementById('material-id').value = material.id;
+            document.getElementById('material-name').value = material.name;
+            document.getElementById('material-quantity').value = material.quantity || '';
+            document.getElementById('material-cost').value = material.cost || '';
+            openModal('material-modal');
+        }
+
+        function saveMaterial(event) {
+            event.preventDefault();
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            if (!project.materials) project.materials = [];
+
+            const id = document.getElementById('material-id').value;
+            const materialData = {
+                name: document.getElementById('material-name').value,
+                quantity: document.getElementById('material-quantity').value,
+                cost: document.getElementById('material-cost').value
+            };
+
+            if (id) {
+                const index = project.materials.findIndex(m => m.id === id);
+                if (index !== -1) {
+                    project.materials[index] = { ...project.materials[index], ...materialData };
+                }
+            } else {
+                project.materials.push({ id: generateId(), ...materialData });
+            }
+
+            saveProjects();
+            closeModal('material-modal');
+            renderMaterials(project);
+            renderProjectDetail(); // Update totals
+            showToast('Material saved!');
+        }
+
+        function deleteMaterial(materialId) {
+            if (!confirm('Delete this material?')) return;
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            project.materials = project.materials.filter(m => m.id !== materialId);
+            saveProjects();
+            renderMaterials(project);
+            renderProjectDetail();
+            showToast('Material deleted');
+        }
+
+        // Tools
+        function renderTools(project) {
+            const container = document.getElementById('tools-list');
+            const tools = project.tools || [];
+
+            if (tools.length === 0) {
+                container.innerHTML = '<p style="color: var(--gunmetal);">No tools added yet.</p>';
+                document.getElementById('tools-total').textContent = '$0.00';
+                return;
+            }
+
+            const total = tools.reduce((sum, t) => sum + (parseFloat(t.cost) || 0), 0);
+            document.getElementById('tools-total').textContent = `$${total.toFixed(2)}`;
+
+            const ownershipLabels = {
+                'owned': 'Owned',
+                'purchased': 'Purchased',
+                'rented': 'Rented'
+            };
+
+            container.innerHTML = tools.map(tool => `
+                <div class="item-row">
+                    <span class="item-name">${escapeHtml(tool.name)}</span>
+                    <span class="item-quantity">${ownershipLabels[tool.ownership] || tool.ownership}</span>
+                    <span class="item-cost">$${(parseFloat(tool.cost) || 0).toFixed(2)}</span>
+                    <div class="item-actions">
+                        <button onclick="editTool('${tool.id}')">Edit</button>
+                        <button onclick="deleteTool('${tool.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddToolModal() {
+            document.getElementById('tool-form').reset();
+            document.getElementById('tool-id').value = '';
+            openModal('tool-modal');
+        }
+
+        function editTool(toolId) {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            const tool = project.tools.find(t => t.id === toolId);
+            if (!tool) return;
+
+            document.getElementById('tool-id').value = tool.id;
+            document.getElementById('tool-name').value = tool.name;
+            document.getElementById('tool-ownership').value = tool.ownership || 'owned';
+            document.getElementById('tool-cost').value = tool.cost || '';
+            openModal('tool-modal');
+        }
+
+        function saveTool(event) {
+            event.preventDefault();
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            if (!project.tools) project.tools = [];
+
+            const id = document.getElementById('tool-id').value;
+            const toolData = {
+                name: document.getElementById('tool-name').value,
+                ownership: document.getElementById('tool-ownership').value,
+                cost: document.getElementById('tool-cost').value
+            };
+
+            if (id) {
+                const index = project.tools.findIndex(t => t.id === id);
+                if (index !== -1) {
+                    project.tools[index] = { ...project.tools[index], ...toolData };
+                }
+            } else {
+                project.tools.push({ id: generateId(), ...toolData });
+            }
+
+            saveProjects();
+            closeModal('tool-modal');
+            renderTools(project);
+            renderProjectDetail();
+            showToast('Tool saved!');
+        }
+
+        function deleteTool(toolId) {
+            if (!confirm('Delete this tool?')) return;
+
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            project.tools = project.tools.filter(t => t.id !== toolId);
+            saveProjects();
+            renderTools(project);
+            renderProjectDetail();
+            showToast('Tool deleted');
+        }
+
+        // Notes
+        function saveNotes() {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            project.notes = document.getElementById('project-notes').value;
+            saveProjects();
+            showToast('Notes saved!');
+        }
+
+        // Premium features
+        function openShareModal() {
+            const project = projects.find(p => p.id === currentProjectId);
+            if (!project) return;
+
+            document.getElementById('share-link').value = `https://urbanoutlawsupply.com/projects/${project.id}`;
+            openModal('share-modal');
+        }
+
+        function copyShareLink() {
+            const input = document.getElementById('share-link');
+            input.select();
+            document.execCommand('copy');
+            showToast('Link copied!');
+        }
+
+        function printProjectCard() {
+            window.print();
+        }
+
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+                closeLightbox();
+            }
+            if (document.getElementById('lightbox').classList.contains('active')) {
+                if (e.key === 'ArrowLeft') navigateLightbox(-1);
+                if (e.key === 'ArrowRight') navigateLightbox(1);
+            }
+        });
+    </script>
+</body>
+</html>
